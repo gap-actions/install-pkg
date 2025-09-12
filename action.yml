@@ -6,11 +6,11 @@ inputs:
     required: true
     default: ''
   ignore-errors:
-    description: 'Ignore errors'
+    description: 'Ignore errors when installing'
     required: false
     default: 'false'
   use-latex:
-    description: "if true, then install and use latex (only works on Linux)"
+    description: "Install and use latex (only works on Linux)"
     required: false
     default: "false"
 

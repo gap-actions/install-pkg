@@ -20,8 +20,9 @@ runs:
         $GAP -A <<GAPInput
           success := true;
           success := success and LoadPackage("PackageManager");
-          pkgs := SplitString("${{ inputs.packages }}"," ");
-          for pkg in pkgs do
+          pkgs := """${{ inputs.packages }}""";
+          pkgList := SplitString(pkgList," \n");
+          for pkg in pkgList do
               success := success and InstallPackage( pkg );
           od;
           QUIT_GAP(success);

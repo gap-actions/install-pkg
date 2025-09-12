@@ -38,7 +38,7 @@ runs:
         done
 
         # Exit unless ignore-errors is set to true
-        if [ "${{ inputs.ignore-errors }}" != "true" ]; then
+        if [ "${{ inputs.ignore-errors }}" != "true" && "$error_found" = "true"]; then
           exit 1
         fi
           

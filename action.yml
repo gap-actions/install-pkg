@@ -30,7 +30,8 @@ runs:
           if ! gap -A <<GAPInput
             LoadPackage("PackageManager");
             QUIT_GAP(InstallPackage("${pkg}"));
-          GAPInput; then
+          GAPInput
+          then
             error_found=true
             echo "::error::Installation of ${pkg} may have failed"
           fi

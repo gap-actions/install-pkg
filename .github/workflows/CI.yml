@@ -9,7 +9,7 @@ on:
 
 jobs:
   test:
-    name: "Test on ${{ matrix.gap-version }}, ${{ inputs.packages }}, ${{ inputs.use-latex }}, ${{ inputs.ignore-errors }}"
+    name: "Test on ${{ matrix.gap-version }}, ${{ inputs.use-latex }}, ${{ inputs.ignore-errors }}"
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -21,18 +21,11 @@ jobs:
           - '4.12'
           - '4.11'
           - '4.10'
-        include: 
-          - packages: 'https://github.com/gap-packages/sophus.git'
-            use-latex: true
-            ignore-errors: false
-          - packages: 'https://github.com/gap-packages/sophus.git'
-            use-latex: true
-            ignore-errors: false
-          - packages: |
-              utils
-              https://github.com/gap-packages/grpconst/releases/download/v2.6.2/grpconst-2.6.2.tar.gz
-            use-latex: false
-            ignore-errors: false
+        use-latex: ["true","false"]
+        ignore-errors: ["true","false"]
+        exclude:
+          - use-latex: "false"
+            ignore-errors: "true"
           
     steps:
       - name: "Check out this repository"
@@ -44,7 +37,9 @@ jobs:
           gap-version: ${{ matrix.gap-version }}
       - uses: ./this-action/
         with:
-          packages: ${{ matrix.packages }}
+          packages: |
+            https://github.com/gap-packages/sophus.git
+            utils
+            https://github.com/gap-packages/grpconst/releases/download/v2.6.2/grpconst-2.6.2.tar.gz
           use-latex: ${{ matrix.use-latex }}
           ignore-errors: ${{ matrix.ignore-errors }}
-

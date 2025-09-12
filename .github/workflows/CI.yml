@@ -9,7 +9,7 @@ on:
 
 jobs:
   test:
-    name: "Test on ${{ matrix.gap-version }}, separator = ${{ matrix.sep }}"
+    name: "Test on ${{ matrix.gap-version }}, ${{ inputs.packages }}, ${{ inputs.use-latex }}, ${{ inputs.ignore-errors }}"
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -21,17 +21,18 @@ jobs:
           - '4.12'
           - '4.11'
           - '4.10'
-        packages:
-          - 'https://github.com/gap-packages/sophus.git utils'
-          - |
-            utils
-            https://github.com/gap-packages/grpconst/releases/download/v2.6.2/grpconst-2.6.2.tar.gz
-        use-latex: ["true","false"]
-        ignore-errors: ["true","false"]
-        exclude:
-          - packages: 'https://github.com/gap-packages/sophus.git utils'
-            use-latex: 'false'
-            ignore-errors: 'false'
+        include: 
+          - packages: 'https://github.com/gap-packages/sophus.git'
+            use-latex: true
+            ignore-errors: false
+          - packages: 'https://github.com/gap-packages/sophus.git'
+            use-latex: true
+            ignore-errors: false
+          - packages: |
+              utils
+              https://github.com/gap-packages/grpconst/releases/download/v2.6.2/grpconst-2.6.2.tar.gz
+            use-latex: false
+            ignore-errors: false
           
     steps:
       - name: "Check out this repository"

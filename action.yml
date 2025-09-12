@@ -1,5 +1,5 @@
-name: 'Run package tests'
-description: 'Run package tests'
+name: 'Install packages'
+description: 'Install additional GAP packages'
 inputs:
   packages:
     description: 'Space-separated list of packages to install'

@@ -51,7 +51,7 @@ get_pkg_name() {
 # Get archive URL
 get_archive_url() {
   local repo="$1"
-  local version="$2"
+  version="$2"
   
   if [[ "${version}" = "latest" ]]; then
     echo "Fetching latest release for ${repo}"

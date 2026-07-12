@@ -99,17 +99,17 @@ get_archive_url() {
     ${GAP} --bare -q <<GAPInput
       Read("${info}");;
       info := GAPInfo.PackageInfoCurrent;;
-      PrintTo( "${TMPDIR}/formats.txt", info.ArchiveFormats );;
       PrintTo( "${TMPDIR}/archive_base.txt", info.ArchiveURL );;
+      PrintTo( "${TMPDIR}/formats.txt", info.ArchiveFormats );;
       PrintTo( "${TMPDIR}/version.txt", info.Version );;
       QUIT;
 GAPInput
-      formats=$(tr -d '\\\n' < "${TMPDIR}"/formats.txt)
-      rm "${TMPDIR}"/formats.txt
-      archive_base=$(tr -d '\\\n' < "${TMPDIR}"/archive_base.txt)
-      rm "${TMPDIR}"/archive_base.txt
-      version=$(tr -d '\\\n' < "${TMPDIR}"/version.txt)
-      rm "${TMPDIR}"/version.txt
+    archive_base=$(tr -d '\\\n' < "${TMPDIR}"/archive_base.txt)
+    formats=$(tr -d '\\\n' < "${TMPDIR}"/formats.txt)
+    version=$(tr -d '\\\n' < "${TMPDIR}"/version.txt)
+    rm "${TMPDIR}"/archive_base.txt
+    rm "${TMPDIR}"/formats.txt
+    rm "${TMPDIR}"/version.txt
   else
     echo "Using package-info.json asset"
     info="${TMPDIR}/package-info.json"

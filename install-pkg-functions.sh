@@ -77,6 +77,9 @@ get_archive_url() {
     rm "${TMPDIR}/releases.json"
   fi
 
+  local tag_name
+  tag_name=$(jq -r '.tag_name' "${TMPDIR}/release.json")
+  
   local asset_url
   asset_url=$(jq -r '
     .assets[]
@@ -85,24 +88,42 @@ get_archive_url() {
   ' "${TMPDIR}/release.json")
   rm "${TMPDIR}/release.json"
 
-  if [[ -z "${asset_url}" ]] || [[ "${asset_url}" = "null" ]]; then
-    echo "::error::Release has no package-info.json asset"
-    exit 1
-  fi
-
   local info
-  info="${TMPDIR}/package-info.json"
-  wget -qO "${info}" "${asset_url}"
-
   local archive_base
   local formats
-  archive_base=$(jq -r '.ArchiveURL' "${info}")
-  formats=$(jq -r '.ArchiveFormats' "${info}")
+  if [[ -z "${asset_url}" ]] || [[ "${asset_url}" = "null" ]]; then
+    echo "Using PackageInfo.g file"
+    asset_url="https://raw.githubusercontent.com/${repo}/refs/tags/${tag_name}/PackageInfo.g"
+    info="${TMPDIR}/PackageInfo.g"
+    wget -qO "${info}" "${asset_url}"
+    ${GAP} --bare -q <<GAPInput
+      Read("${info}");;
+      info := GAPInfo.PackageInfoCurrent;;
+      PrintTo( "${TMPDIR}/archive_base.txt", info.ArchiveURL );;
+      PrintTo( "${TMPDIR}/formats.txt", info.ArchiveFormats );;
+      PrintTo( "${TMPDIR}/version.txt", info.Version );;
+      QUIT;
+GAPInput
+    archive_base=$(tr -d '\\\n' < "${TMPDIR}"/archive_base.txt)
+    formats=$(tr -d '\\\n' < "${TMPDIR}"/formats.txt)
+    version=$(tr -d '\\\n' < "${TMPDIR}"/version.txt)
+    rm "${TMPDIR}"/archive_base.txt
+    rm "${TMPDIR}"/formats.txt
+    rm "${TMPDIR}"/version.txt
+  else
+    echo "Using package-info.json asset"
+    info="${TMPDIR}/package-info.json"
+    wget -qO "${info}" "${asset_url}"
+    archive_base=$(jq -r '.ArchiveURL' "${info}")
+    formats=$(jq -r '.ArchiveFormats' "${info}")
+    version=$(jq -r '.Version' "${info}")
+  fi
+
   formats=$(echo "${formats}" | tr ' ' '\n')
 
-  version=$(jq -r '.Version' "${info}")
   echo "Selected version ${version} from ${repo} releases"
   combine_url "${archive_base}" "${formats}"
+      
   rm "${info}"
 }
 

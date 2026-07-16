@@ -186,5 +186,5 @@ GAPINPUT
 clear_dest() {
   local dest="$1"
   rm -rf "${dest}"
-  rm -rf "${dest}-*"
+  rm -rf "${dest}-"[0-9]*
 }

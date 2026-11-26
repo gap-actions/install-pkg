@@ -45,7 +45,7 @@ jobs:
         with:
           packages: |
             Example@devel
-            gap-packages/AutoDoc
+            gap-packages/grape
             PrImGrP
             groupoids@1.80
             gap-packages/utils@0.92
@@ -64,7 +64,7 @@ jobs:
             end;;
             bool := [
               chck( "example",      "4.4.1"      ),
-              chck( "autodoc",      "2026.03.18" ),
+              chck( "grape",        "4.9.3"      ),
               chck( "primgrp",      "4.0.2"      ),
               chck( "groupoids",    "1.80"       ),
               chck( "utils",        "0.92"       ),
